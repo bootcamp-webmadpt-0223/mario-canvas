@@ -44,9 +44,43 @@ class Player {
     )
 
     // 2. Animate player
+    this.animate(framesCounter);
     // 3. Move player
+    this.move();
     // 4. Draw bullets
+    this.bullets.forEach(function(bullet) {
+      bullet.draw();
+    })
     // 5. Clear bullets
+    this.clearBullets();
+  }
+  setListeners() {
+
+    document.addEventListener("keydown", e => {
+      switch (e.keyCode) {
+        case this.keys.TOP:
+          // Check if its on the floor 👀
+          if(this.posY >= this.posY0){
+            this.jump()
+          }
+          break;
+        case this.keys.SPACE:
+          this.shoot();
+          break;
+      }
+    });
+  }
+
+  shoot() {
+    // Add new Bullet to the bullets array
+    this.bullets.push(new Bullets(this.ctx, this.posX, this.posY, this.posY0, this.width, this.height))
+  }
+
+  clearBullets() {
+    // Clear bullets (.filter 👀)
+    this.bullets = this.bullets.filter((bullet) => {
+      return bullet.posX <= this.gameWidth;
+    })
   }
 
   animate(framesCounter) {
@@ -69,31 +103,11 @@ class Player {
     }
   }
 
-  setListeners() {
-
-    document.addEventListener("keydown", e => {
-      switch (e.keyCode) {
-        case this.keys.TOP:
-          // Check if its on the floor 👀
-          // .jump()
-          break;
-        case this.keys.SPACE:
-          // .shoot
-          break;
-      }
-    });
-  }
 
   jump() {
     this.posY -= 40;
     this.velY -= 8;
   }
 
-  shoot() {
-    // Add new Bullet to the bullets array
-  }
 
-  clearBullets() {
-    // Clear bullets (.filter 👀)
-  }
 }
